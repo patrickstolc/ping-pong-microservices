@@ -11,6 +11,26 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+  apigateway:
+    image: api-gateway
+    build:
+      context: .
+      dockerfile: Gateway/Dockerfile
+    ports:
+      - "8081:80"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+  authservice:
+    image: auth-service
+    build:
+      context: .
+      dockerfile: AuthService/Dockerfile
+    ports:
+      - "9191:80"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
   pingservice:
     image: ping-service
     build:

@@ -18,7 +18,7 @@ public class PingController : ControllerBase
     public async Task<string> Get()
     {
         var httpClient = new HttpClient();
-        var response = await httpClient.GetStringAsync("http://localhost:8080/pong");
+        var response = await httpClient.GetStringAsync("http://pongservice/pong");
         return response;
     }
     

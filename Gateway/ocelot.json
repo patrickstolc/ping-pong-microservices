@@ -1,0 +1,48 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/Auth",
+      "UpstreamHttpMethod": [ "Post" ],
+      "DownstreamPathTemplate": "/Auth",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "authservice",
+          "Port": 80
+        }
+      ]
+    },
+    {
+      "UpstreamPathTemplate": "/ping",
+      "UpstreamHttpMethod": [ "Get", "Post"],
+      "DownstreamPathTemplate": "/ping",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pingservice",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+        ]
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/pong",
+      "UpstreamHttpMethod": [ "Get", "Post" ],
+      "DownstreamPathTemplate": "/pong",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pongservice",
+          "Port": 80
+        }
+      ]
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5291"
+  }
+}

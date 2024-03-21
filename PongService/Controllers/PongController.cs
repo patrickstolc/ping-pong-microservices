@@ -15,6 +15,12 @@ public class PongController : ControllerBase
         _messageClient = messageClient;
     }
     
+    [HttpGet]
+    public string Get()
+    {
+        return "Pong!";
+    }
+    
     [HttpPost]
     public bool Post()
     {
