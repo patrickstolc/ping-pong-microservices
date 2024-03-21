@@ -15,14 +15,21 @@ public class JwtTokenService
         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecurityKey));
         var signingCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
         
+        var claims = new List<Claim>
+        {
+            new Claim("scope", "ping.read"),
+            new Claim("scope", "ping.post")
+        };
+        
         var tokenOptions = new JwtSecurityToken(
-            signingCredentials: signingCredentials
+            signingCredentials: signingCredentials,
+            claims: claims
         );
 
         var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
         var authToken = new AuthenticationToken
         {
-            Value = tokenString
+            Value = tokenString,
         };
 
         return authToken;

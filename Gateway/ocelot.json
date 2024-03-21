@@ -14,7 +14,7 @@
     },
     {
       "UpstreamPathTemplate": "/ping",
-      "UpstreamHttpMethod": [ "Get", "Post"],
+      "UpstreamHttpMethod": [ "Get"],
       "DownstreamPathTemplate": "/ping",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
@@ -26,6 +26,25 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": [
+          "ping.read"
+        ]
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/ping",
+      "UpstreamHttpMethod": [ "Post"],
+      "DownstreamPathTemplate": "/ping",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "pingservice",
+          "Port": 80
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": [
+          "ping.post"
         ]
       }
     },
