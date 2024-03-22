@@ -24,9 +24,8 @@
         }
       ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
+        "AuthenticationProviderKey": "dev",
         "AllowedScopes": [
-          "ping.read"
         ]
       }
     },
@@ -42,9 +41,8 @@
         }
       ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
+        "AuthenticationProviderKey": "dev",
         "AllowedScopes": [
-          "ping.post"
         ]
       }
     },
@@ -62,6 +60,6 @@
     }
   ],
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5291"
+    "BaseUrl": "http://localhost:8081"
   }
 }

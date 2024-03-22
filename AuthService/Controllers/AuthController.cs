@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using AuthService.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthService.Controllers;
@@ -12,6 +14,25 @@ public class AuthController : ControllerBase
     public AuthController(JwtTokenService jwtTokenService)
     {
         _jwtTokenService = jwtTokenService;
+    }
+    
+    [HttpGet]
+    public bool Authorize()
+    {
+        // checking for a valid token in the Authorization header
+        var re = Request;
+
+        if (!re.Headers.ContainsKey("Authorization"))
+            return false;
+
+        if (!re.Headers["Authorization"].ToString().StartsWith("Bearer "))
+            return false;
+
+        var token = re.Headers["Authorization"].ToString().Replace("Bearer ", "");
+        
+        // decode the token & check if it's valid
+        var result = _jwtTokenService.DecodeToken(token);
+        return result.Succeeded;
     }
 
     [HttpPost]

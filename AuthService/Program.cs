@@ -1,10 +1,12 @@
+using System.Text.Json.Serialization;
 using AuthService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddSingleton(new JwtTokenService());
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(x =>
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);;
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
