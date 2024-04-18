@@ -5,6 +5,11 @@ namespace PingService;
 
 public class MessageHandler : BackgroundService
 {
+    private readonly Settings _settings;
+    public MessageHandler(Settings settings)
+    {
+        _settings = settings;
+    }
     private void HandlePongMessage(PongMessage message)
     {
         Console.WriteLine($"Got pong: {message.Message}");
@@ -12,9 +17,15 @@ public class MessageHandler : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         Console.WriteLine("Message handler is running..");
+        
+        var connectionString = _settings.ConnectionStrings?["RabbitMQ"].ConnectionString;
+        if(connectionString == null)
+        {
+            throw new Exception("RabbitMQ connection string not found in settings");
+        }
 
         var messageClient = new MessageClient(
-            RabbitHutch.CreateBus("host=rabbitmq;port=5672;virtualHost=/;username=guest;password=guest")    
+            RabbitHutch.CreateBus(connectionString)    
         );
         
         messageClient.Listen<PongMessage>(HandlePongMessage, "pong-message");

@@ -13,6 +13,7 @@ public class TestPingServiceAPI : IAsyncLifetime
     
     public async Task InitializeAsync()
     {
+        Environment.SetEnvironmentVariable("PONG_SERVICE_URL", "http://localhost:8080");
         _pongService = WireMockServer.Start(
             new WireMockServerSettings
             {

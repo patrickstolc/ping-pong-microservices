@@ -1,6 +1,7 @@
 version: "3"
 services:
   rabbitmq:
+    user: "999"
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq
     healthcheck:
@@ -38,6 +39,8 @@ services:
       dockerfile: PingService/Dockerfile
     ports:
       - "9090:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
       rabbitmq:
         condition: service_healthy
