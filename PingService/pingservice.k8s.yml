@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: pingservice
-          image: pingpongexample/pingservice
+          image: pingpongexample/pingservice:0.2
           imagePullPolicy: Never
           env:
             - name: PONG_SERVICE_URL

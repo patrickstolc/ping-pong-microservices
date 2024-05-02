@@ -1,9 +1,25 @@
 version: "3"
 services:
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault
+    ports:
+      - "8200:8200"
+    volumes:
+      - ./config.hcl:/vault/config/config.hcl:ro
+      - ./vault_data:/vault/data
+    cap_add:
+        - IPC_LOCK
+    command: server
+    restart: always
+    networks:
+      - microservices
   rabbitmq:
     user: "999"
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq
+    networks:
+      - microservices
     healthcheck:
       test: rabbitmq-diagnostics check_port_connectivity
       interval: 1s
@@ -19,6 +35,9 @@ services:
       dockerfile: Gateway/Dockerfile
     ports:
       - "8081:80"
+    networks:
+      - microservices
+      - default
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -27,8 +46,8 @@ services:
     build:
       context: .
       dockerfile: AuthService/Dockerfile
-    ports:
-      - "9191:80"
+    networks:
+      - microservices
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -37,8 +56,8 @@ services:
     build:
       context: .
       dockerfile: PingService/Dockerfile
-    ports:
-      - "9090:80"
+    networks:
+      - microservices
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
@@ -49,8 +68,14 @@ services:
     build:
       context: .
       dockerfile: PongService/Dockerfile
-    ports:
-      - "8080:80"
+    networks:
+      - microservices
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
       rabbitmq:
         condition: service_healthy
+
+networks:
+  microservices:
+    internal: true

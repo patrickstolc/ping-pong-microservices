@@ -57,6 +57,18 @@
           "Port": 80
         }
       ]
+    },
+    {
+      "UpstreamPathTemplate": "/pong/faucet",
+      "UpstreamHttpMethod": [ "Get" ],
+      "DownstreamPathTemplate": "/api/faucet",
+      "DownstreamScheme": "http",
+        "DownstreamHostAndPorts": [
+            {
+            "Host": "pongservice",
+            "Port": 80
+            }
+        ]
     }
   ],
   "GlobalConfiguration": {

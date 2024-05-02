@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PingService;
 using SharedMessages;
@@ -15,6 +16,7 @@ public class PongController : ControllerBase
         _messageClient = messageClient;
     }
     
+    [Authorize]
     [HttpGet]
     public string Get()
     {

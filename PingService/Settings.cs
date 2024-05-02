@@ -15,4 +15,6 @@ public sealed class Settings
     public Dictionary<string, ServiceSettings>? Services { get; set; } = null!;
     
     public Dictionary<string, ConnectionStringSettings>? ConnectionStrings { get; set; } = null!;
+    
+    public string VaultHostname { get; set; } = null!;
 }
