@@ -1,5 +1,34 @@
 version: "3"
 services:
+  logging-sidecar:
+    container_name: fluentd_logger
+    build:
+      context: .
+      dockerfile: fluentd/Dockerfile
+    volumes:
+      - ./fluentd/conf:/fluentd/etc
+    environment:
+      FLUENTD_CONF: "fluent.conf"
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+    expose:
+      - "9200"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.1
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
   vault:
     image: hashicorp/vault:latest
     container_name: vault
@@ -12,15 +41,10 @@ services:
         - IPC_LOCK
     command: server
     restart: always
-    networks:
-      - microservices
-      - default
   rabbitmq:
     user: "999"
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq
-    networks:
-      - microservices
     healthcheck:
       test: rabbitmq-diagnostics check_port_connectivity
       interval: 1s
@@ -36,9 +60,6 @@ services:
       dockerfile: Gateway/Dockerfile
     ports:
       - "8081:80"
-    networks:
-      - microservices
-      - default
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -47,18 +68,21 @@ services:
     build:
       context: .
       dockerfile: AuthService/Dockerfile
-    networks:
-      - microservices
     depends_on:
       rabbitmq:
         condition: service_healthy
   pingservice:
     image: ping-service
+    links:
+      - logging-sidecar
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: "docker.pingservice"
     build:
       context: .
       dockerfile: PingService/Dockerfile
-    networks:
-      - microservices
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
@@ -66,17 +90,18 @@ services:
         condition: service_healthy
   pongservice:
     image: pong-service
+    links:
+      - logging-sidecar
+    logging:
+      driver: "fluentd"
+      options:
+          fluentd-address: localhost:24224
+          tag: "docker.pongservice"
     build:
       context: .
       dockerfile: PongService/Dockerfile
-    networks:
-      - microservices
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
       rabbitmq:
         condition: service_healthy
-
-networks:
-  microservices:
-    internal: true

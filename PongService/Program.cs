@@ -48,4 +48,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+Console.WriteLine("Pong Service is running...");
 app.Run();

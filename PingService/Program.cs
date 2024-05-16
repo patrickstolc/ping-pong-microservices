@@ -51,4 +51,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+Console.WriteLine("Ping Service is running...");
 app.Run();
